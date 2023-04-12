@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable, Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -44,14 +45,36 @@ export class AppComponent implements OnInit {
     })
   }
 
+  minhaObservable(nome: string) : Observable<string> {
+    return new Observable(subscriber => {
+      
+      if(nome === 'Angelo') {
+        subscriber.next('Olá! ' + nome); 
+        subscriber.next('Olá denovo! ' + nome); 
+        setTimeout(() => {
+          subscriber.next('Resposta com Delay! ' + nome);
+        }, 5000);
+      } else {
+        subscriber.error('Ops! Deu erro!  ')
+      }
+      
+    });
+  }
+
+
   ngOnInit(): void {
 /*     this.minhaPromisse('Angelo')
-    .then(result => console.log(result)); */
+    .then(result => console.log(result)); 
   
     this.minhaPromisse('Jose')
     .then(result => console.log(result))
-    .catch(erro => console.log(erro));
+    .catch(erro => console.log(erro));*/
   
+    this.minhaObservable('Angelo')
+    .subscribe(
+      result => console.log(result),
+      erro => console.log(erro)
+      );
   }
 
 }
