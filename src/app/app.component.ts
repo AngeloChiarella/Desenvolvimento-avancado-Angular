@@ -32,9 +32,9 @@ export class AppComponent implements OnInit {
 
   title = 'RXJS';
 
-  minhaPromisse(nome: string) : Promise<string> {
+  minhaPromisse(nome: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      if(nome === 'Angelo') {
+      if (nome === 'Angelo') {
         setTimeout(() => {
           resolve('Seja bem vindo ' + nome);
         }, 1000);
@@ -45,36 +45,47 @@ export class AppComponent implements OnInit {
     })
   }
 
-  minhaObservable(nome: string) : Observable<string> {
+  minhaObservable(nome: string): Observable<string> {
     return new Observable(subscriber => {
-      
-      if(nome === 'Angelo') {
-        subscriber.next('Olá! ' + nome); 
-        subscriber.next('Olá denovo! ' + nome); 
+
+      if (nome === 'Angelo') {
+        subscriber.next('Olá! ' + nome);
+        subscriber.next('Olá denovo! ' + nome);
         setTimeout(() => {
           subscriber.next('Resposta com Delay! ' + nome);
         }, 5000);
+        subscriber.complete();
       } else {
         subscriber.error('Ops! Deu erro!  ')
       }
-      
+
     });
   }
 
 
   ngOnInit(): void {
-/*     this.minhaPromisse('Angelo')
-    .then(result => console.log(result)); 
-  
-    this.minhaPromisse('Jose')
-    .then(result => console.log(result))
-    .catch(erro => console.log(erro));*/
-  
+    /*     this.minhaPromisse('Angelo')
+        .then(result => console.log(result)); 
+      
+        this.minhaPromisse('Jose')
+        .then(result => console.log(result))
+        .catch(erro => console.log(erro));*/
+
     this.minhaObservable('Angelo')
-    .subscribe(
-      result => console.log(result),
-      erro => console.log(erro)
-      );
+      .subscribe(
+        result => console.log(result),
+        erro => console.log(erro),
+        () => console.log('FIM!'));
+
+    const observer = {
+      next: (valor: any) => console.log('Next: ', valor),
+      error: (erro: any) => console.log('Erro: ', erro),
+      complete: () => console.log('FIM!')
+    }
+
+    const obs = this.minhaObservable('Angelo');
+    obs.subscribe(observer);
+
   }
 
 }
